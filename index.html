@@ -95,12 +95,13 @@
 
  ── ZOAN : ANIMATIONS, FRAPPE ET COMPÉTENCES
  50   8764  v180    v180 : Zoan — animations refaites, frappe en combo de 3 par famille, 2 compétences uniques par fruit
+ 51   8790  v181    v181 : Zoan déverrouillés — bouton Fruit = transformation, 1re forme sans maîtrise requise
 
 ========================================================================================================
 -->
 <html lang="fr"><head><meta charset="utf-8">
 <!-- ═══ 1) CONFIG : adresse du serveur (laisser '' si le serveur sert lui-même le jeu) ═══ -->
-<script>/* Version GitHub Pages : mets ici l'adresse de ton serveur, ex. 'https://era-xxxx.onrender.com' (sans / final). Laisse '' si le serveur sert lui-même le jeu. */window.ERA_API='';</script>
+<script>/* Version GitHub Pages : mets ici l'adresse de ton serveur, ex. 'https://era-xxxx.onrender.com' (sans / final). Laisse '' si le serveur sert lui-même le jeu. */window.ERA_API='https://era-mzk8.onrender.com';</script>
 <!-- ══════════════════════════════════════════════════════════════════════
      COUCHE 00 · stockage · MOTEUR
      Stockage serveur : les clés pl_* vivent en mémoire et sont synchronisées avec le compte -->
@@ -8890,6 +8891,21 @@ function dFx(){if(!ZF.length)return;ctx.save();
 const _pD180=pDraw;pDraw=function(){_pD180();try{dFx()}catch(e){}};
 console.log('ERA v180 : Zoan — animations, frappe et compétences refaites');
 })()}catch(e){console.warn("v180 Zoan",e)}
+</script>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     COUCHE 51 · v181 · ZOAN DÉVERROUILLÉS
+     v181 : le bouton Fruit ne répond plus « Fruit Zoan verrouillé » : il active le mode Zoan et lance la transformation.
+     La 1re transformation n'exige plus de maîtrise du fruit (elle était impossible : la maîtrise d'un Zoan ne se gagne qu'une fois transformé). -->
+<script data-couche="v181-zoan-deverrou">
+try{(function(){
+FTREQ[0]=0;
+const b=document.getElementById('wbFruit');
+if(b)b.addEventListener('pointerdown',e=>{if(!isZ9(pl.df))return;e.stopImmediatePropagation();e.preventDefault();pl.wm=0;pl.fr=0;pl.hb=0;pl.pm='f';zoanT()},true);
+const _p181=pUpd;pUpd=function(dt){_p181(dt);try{if(b&&isZ9(pl.df)){b.classList.remove('nofr');b.classList.toggle('on',pl.zt>0)}}catch(e){}};
+console.log('ERA v181 : Zoan déverrouillés');
+})()}catch(e){console.warn("v181 Zoan",e)}
 </script>
 
 </body></html>
