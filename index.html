@@ -95,7 +95,8 @@
 
  ── ZOAN : ANIMATIONS, FRAPPE ET COMPÉTENCES
  50   8764  v180    v180 : Zoan — animations refaites, frappe en combo de 3 par famille, 2 compétences uniques par fruit
- 51   8790  v181    v181 : Zoan déverrouillés — bouton Fruit = transformation, 1re forme sans maîtrise requise
+ 51   8790  v181    v181 : Zoan déverrouillés — bouton Fruit = transformation, formes hybride et complète sans maîtrise ni niveau de fruit requis
+ 52   8915  v182    v182 : inventaire — Fruit Zoan Serpent obtenable et mangeable
 
 ========================================================================================================
 -->
@@ -8900,12 +8901,32 @@ console.log('ERA v180 : Zoan — animations, frappe et compétences refaites');
      La 1re transformation n'exige plus de maîtrise du fruit (elle était impossible : la maîtrise d'un Zoan ne se gagne qu'une fois transformé). -->
 <script data-couche="v181-zoan-deverrou">
 try{(function(){
-FTREQ[0]=0;
+FTREQ[0]=0;FTREQ[1]=0;/* hybride et forme complète : plus de maîtrise exigée (les 🔒 du menu Maîtrise passent en ✓) */
+const _z181=zoanT;zoanT=function(){const d=pl.dfl;pl.dfl=Math.max(d|0,4);try{return _z181.apply(this,arguments)}finally{pl.dfl=d}};/* lève aussi l'exigence « fruit niveau 4 » */
 const b=document.getElementById('wbFruit');
 if(b)b.addEventListener('pointerdown',e=>{if(!isZ9(pl.df))return;e.stopImmediatePropagation();e.preventDefault();pl.wm=0;pl.fr=0;pl.hb=0;pl.pm='f';zoanT()},true);
 const _p181=pUpd;pUpd=function(dt){_p181(dt);try{if(b&&isZ9(pl.df)){b.classList.remove('nofr');b.classList.toggle('on',pl.zt>0)}}catch(e){}};
 console.log('ERA v181 : Zoan déverrouillés');
 })()}catch(e){console.warn("v181 Zoan",e)}
+</script>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     COUCHE 52 · v182 · INVENTAIRE : FRUIT ZOAN SERPENT
+     v182 : le Fruit Zoan Serpent était exclu du tirage, du stock et du bouton « Manger » (un filtre /Serpent/ d'un ancien fruit
+     le prenait pour cible). Il peut maintenant être obtenu (marchands, boss) et mangé comme les autres Zoan. -->
+<script data-couche="v182-inventaire-zoan">
+try{(function(){
+const zs=()=>{for(let n=1;n<=FRUITS.length;n++)if(/Zoan Serpent/.test(FRUITS[n-1][0]))return n;return 0};
+const _fa=fsAdd;fsAdd=function(n){if(n&&n==zs()){if(frOwned(n))return false;(pl.fs=pl.fs||[]).push(n);return true}return _fa.apply(this,arguments)};
+const _fr=frRoll;frRoll=function(){const s=zs(),r=_fr.apply(this,arguments);if(s&&!frOwned(s)&&(!r||Math.random()<1/12))return s;return r};
+eatFr=function(i){const S=pl.fs||[],n=S[i];if(!n||pl.hp<=0)return;if(pl.df==n){toast={s:'Tu as déjà ce fruit',t:2};return}
+ if(pl.df>0&&!(FRCF==i&&Date.now()-FRCT<6000)){FRCF=i;FRCT=Date.now();pm();return}
+ FRCF=-1;const old=pl.df;S.splice(i,1);pl.zt=0;pl.zf=0;pl.df=n;recalc();save();
+ if(old>0){pl.hp=0;pl.dt=1.4;sfx('hurt');shake=6;toast={s:'Ton corps rejette '+FRUITS[old-1][0]+' : tu meurs. Nouveau fruit : '+FRUITS[n-1][0],t:5}}
+ else toast={s:'Tu as mangé : '+FRUITS[n-1][0]+' !',t:4};pm()};
+console.log('ERA v182 : Fruit Zoan Serpent débloqué');
+})()}catch(e){console.warn("v182 inventaire",e)}
 </script>
 
 </body></html>
